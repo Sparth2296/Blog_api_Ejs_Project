@@ -2,6 +2,7 @@
 const userModel = require('../model/userModel');
 const bcrypt = require('bcrypt'); 
 
+
 module.exports.register = (req, res) => {
     res.render('register');
 }
@@ -20,7 +21,10 @@ module.exports.UserRegister = async (req, res) => {
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        await userModel.create({ username, email, password: hashPassword });
+        const user = await userModel.create({ username, email, password: hashPassword });
+
+
+        res.cookie('userId', user._id);
 
     
         res.redirect('/home');
@@ -45,13 +49,12 @@ module.exports.UserLogin = async (req, res) => {
         const user = await userModel.findOne({ email });
         
         if (!user) {
-            return res.status(400).send('Invalid email or password');
+            return res.status(400).render('/').send('Invalid email or password');
         }       
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).send('Invalid email or password');
+            return res.status(400).render('/login').send('Invalid email or password');
         }   
-
        
         res.redirect('/home');
     } catch (error) {
@@ -59,3 +62,4 @@ module.exports.UserLogin = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
+

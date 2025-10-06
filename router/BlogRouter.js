@@ -3,6 +3,7 @@ const express = require('express');
 const blogCtl = require('../Controller/BlogController')
 const userctl = require('../Controller/userController')
 const model = require('../model/BlogModel')
+const authMiddleware = require('../middleware/auth')
 
 const router = express.Router();
 
@@ -15,14 +16,14 @@ router.post('/userlogin' , userctl.UserLogin)
 
 // Blog Routes
 
-router.get('/home', blogCtl.homePage);
-router.get('/addBlog', blogCtl.addBlog);
-router.post('/createBlog', model.uploadedImage, blogCtl.createBlog);
-router.get('/edit/:id' , blogCtl.editBlog);
-router.post('/updateBlog/:id' , model.uploadedImage , blogCtl.updateBlog);
-router.get('/delete/:id' , blogCtl.deleteBlog);
-router.get('/readBlog/:id' , blogCtl.readBlog);
+router.get('/home', authMiddleware.auth, blogCtl.homePage);
+router.get('/addBlog', authMiddleware.auth, blogCtl.addBlog);
+router.post('/createBlog', authMiddleware.auth, model.uploadedImage, blogCtl.createBlog);
+router.get('/edit/:id' , authMiddleware.auth, blogCtl.editBlog);
+router.post('/updateBlog/:id' , authMiddleware.auth, model.uploadedImage , blogCtl.updateBlog);
+router.get('/delete/:id' , authMiddleware.auth, blogCtl.deleteBlog);
+router.get('/readBlog/:id' , authMiddleware.auth,blogCtl.readBlog);
 
-
+    
 
 module.exports = router;
