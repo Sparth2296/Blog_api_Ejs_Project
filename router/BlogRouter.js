@@ -23,6 +23,7 @@ router.get('/edit/:id' , authMiddleware.auth, blogCtl.editBlog);
 router.post('/updateBlog/:id' , authMiddleware.auth, model.uploadedImage , blogCtl.updateBlog);
 router.get('/delete/:id' , authMiddleware.auth, blogCtl.deleteBlog);
 router.get('/readBlog/:id' , authMiddleware.auth,blogCtl.readBlog);
+router.get('/logout' , authMiddleware.auth, userctl.logout);
 
     
 
